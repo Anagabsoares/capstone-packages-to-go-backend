@@ -1,12 +1,24 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 import app.validate_requests  as validate
+from datetime import datetime
+
 from app.models.user import User
 from app.models.package import Package
-from datetime import datetime
+
+from auth.auth import AuthError, requires_auth
+
 
 
 users_bp = Blueprint("user", __name__, url_prefix="/users")
+
+
+
+@users_bp.errorhandler(AuthError)
+def auth_error(error):
+    response = jsonify(error.error)
+    response.status_code = error.status_code
+    return response
 
 
 # Add permissions -> only staff members can add new residents 
@@ -201,3 +213,5 @@ def get_all_delivered_packages(id):
     packages = Package.query.filter_by(user_id=user_id).all()
 
     return jsonify([package.to_dict() for package in packages if package.delivery_date])
+
+
