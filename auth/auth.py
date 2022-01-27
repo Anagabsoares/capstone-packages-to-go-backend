@@ -1,5 +1,6 @@
 import json
-from decouple import config
+import os
+from dotenv import load_dotenv
 from flask import request
 from functools import wraps
 from jose import jwt
@@ -8,10 +9,10 @@ from urllib.request import urlopen
 
 # https://capstone-package-to-go.us.auth0.com/authorize?audience=https://packages-to-go.com&response_type=token&client_id=olHrVA9ljTarhF43w5PLtxHIq4NHnFSe&redirect_uri=http://localhost:3000
 
-
-AUTH0_DOMAIN = "capstone-package-to-go.us.auth0.com"
-ALGORITHMS = ["RS256"]
-API_AUDIENCE = "https://packages-to-go.com"
+AUTH0_DOMAIN = os.environ.get(
+            "AUTH0_DOMAIN")
+ALGORITHMS = os.environ.get("ALGORITHMS")
+API_AUDIENCE =  os.environ.get("API_AUDIENCE")
 
 
 class AuthError(Exception):
@@ -137,7 +138,6 @@ def verify_decode_jwt(token):
         401,
     )
 
-
 def requires_auth(permission=""):
     def requires_auth_decorator(f):
         @wraps(f)
@@ -150,5 +150,3 @@ def requires_auth(permission=""):
         return wrapper
 
     return requires_auth_decorator
-
-

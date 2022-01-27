@@ -139,7 +139,7 @@ def add_new_package(jwt,id):
 
         return make_response(validate.missing_fields(request_body,Package), 400)
 
-# get all packages related to a user 
+
 @users_bp.route("/<id>/packages", methods=["GET"])
 @requires_auth('read:packages-user')
 def get_packages_by_user_id(jwt,id):
