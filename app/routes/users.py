@@ -41,7 +41,7 @@ def add_user(jwt):
 
 @users_bp.route("/<id>", methods=["DELETE"])
 @requires_auth("delete:user")
-def delete_user(id):
+def delete_user(jwt,id):
     user_id = validate.valid_id(id)
     user = validate.valid_model(user_id, User)
 
@@ -180,7 +180,7 @@ def get_packages_to_be_delivered(jwt,id):
 
 @users_bp.route("/delivery-requests", methods=["GET"])
 @requires_auth('read:delivery-requests')
-def get_requests():
+def get_requests(jwt):
 
     all_users = User.query.filter_by(status=True).all()
     users= [user.to_dict() for user in all_users]

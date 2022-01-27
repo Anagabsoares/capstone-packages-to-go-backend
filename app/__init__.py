@@ -23,7 +23,6 @@ def create_app(test_config=None):
             "SQLALCHEMY_TEST_DATABASE_URI")
 
 
-
     from app.models.user import User
     from app.models.package import Package
 
@@ -38,7 +37,6 @@ def create_app(test_config=None):
     app.register_blueprint(users_bp)
 
     CORS(app)
-
 
 
     return app

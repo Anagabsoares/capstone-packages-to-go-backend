@@ -21,11 +21,11 @@ def auth_error(error):
 
 @packages_bp.route("", methods=["GET"])
 @requires_auth("read:package")
-def get_all_packages():
+def get_all_packages(jwt):
 
     packages= Package.query.all()
     packages_list = [package.to_dict() for package in packages]
-    return make_response(jsonify(packages_list))
+    return make_response(jsonify(packages_list)), 200
 
 
 @packages_bp.route("/<id>", methods=["GET"])
@@ -33,9 +33,9 @@ def get_all_packages():
 def get_package(jwt,id):
 
     package_id = validate.valid_id(id)
-    package = validate.valid_model(package_id, User)
+    package = validate.valid_model(package_id, Package)
 
-    return package.to_dict()
+    return make_response(package.to_dict()), 200
 
 
 @packages_bp.route("/<id>", methods=["DELETE"])
@@ -62,9 +62,9 @@ def update_package_delivery(jwt,id):
     
         db.session.commit()
         response_body = package.to_dict()
-        return make_response(response_body,200)
+        return make_response(response_body), 200
     else:
-        return make_response('This package has already been delivered',200)
+        return make_response('This package has already been delivered'), 200
 
 
 @packages_bp.route("/<id>", methods=["PATCH"])
@@ -94,4 +94,4 @@ def update_user_info(jwt,id):
 
     db.session.commit()
 
-    return make_response(package.to_dict(),201)
+    return make_response(package.to_dict()),200
