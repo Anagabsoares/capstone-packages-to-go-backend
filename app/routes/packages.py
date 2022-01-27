@@ -6,15 +6,21 @@ import app.validate_requests  as validate
 from app.models.package import Package
 from app.models.user import User
 
-# from auth.auth import AuthError, requires_auth
+from auth.auth import AuthError, requires_auth
 
 
 packages_bp = Blueprint("packages", __name__, url_prefix="/packages")
 
 
-# get all packages from database 
-# staff
+@packages_bp.errorhandler(AuthError)
+def auth_error(error):
+    response = jsonify(error.error)
+    response.status_code = error.status_code
+    return response
+
+
 @packages_bp.route("", methods=["GET"])
+@requires_auth("read:package")
 def get_all_packages():
 
     packages= Package.query.all()
@@ -23,7 +29,8 @@ def get_all_packages():
 
 
 @packages_bp.route("/<id>", methods=["GET"])
-def get_package(id):
+@requires_auth("read:packages")
+def get_package(jwt,id):
 
     package_id = validate.valid_id(id)
     package = validate.valid_model(package_id, User)
@@ -31,10 +38,9 @@ def get_package(id):
     return package.to_dict()
 
 
-# permission -> staff/ Only if was incorrect data !
-
 @packages_bp.route("/<id>", methods=["DELETE"])
-def delete_package(id):
+@requires_auth("delete:package")
+def delete_package(jwt,id):
     package_id = validate.valid_id(id)
     package = validate.valid_model(package_id, Package)
 
@@ -44,10 +50,9 @@ def delete_package(id):
     return make_response(response_body), 200
 
 
-# mark a package as delivered
-# staff
 @packages_bp.route("/<id>/mark-as-delivered", methods=["PATCH"])
-def update_package_delivery(id):
+@requires_auth("update:delivery-status")
+def update_package_delivery(jwt,id):
 
     package_id = validate.valid_id(id)
     package = validate.valid_model(package_id, Package)
@@ -61,9 +66,10 @@ def update_package_delivery(id):
     else:
         return make_response('This package has already been delivered',200)
 
-# staff
+
 @packages_bp.route("/<id>", methods=["PATCH"])
-def update_user_info(id):
+@requires_auth("update:packages")
+def update_user_info(jwt,id):
 
     package_id = validate.valid_id(id)
     package = validate.valid_model(package_id, Package)

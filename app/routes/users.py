@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 import app.validate_requests  as validate
-from flask_cors import cross_origin
 from datetime import datetime
 
 from app.models.user import User
@@ -10,9 +9,7 @@ from app.models.package import Package
 from auth.auth import AuthError, requires_auth
 
 
-
 users_bp = Blueprint("user", __name__, url_prefix="/users")
-
 
 
 @users_bp.errorhandler(AuthError)
@@ -53,10 +50,9 @@ def delete_user(id):
     response_body = {"details": f"User {user.id} name: {user.name} unit: {user.unit} successfully deleted"}
     return make_response(response_body), 200
 
-# permission - staff
-# 
+
 @users_bp.route("/<id>", methods=["GET"])
-@requires_auth("read:users")
+@requires_auth("read:user")
 def get_user(jwt,id):
 
     user_id = validate.valid_id(id)
@@ -65,7 +61,6 @@ def get_user(jwt,id):
     return user.to_dict()
 
 
-# ADD PERMISSIONS  -> staff
 @users_bp.route("", methods=["GET"])
 @requires_auth('read:users')
 def get_all_users(jwt):
@@ -74,9 +69,9 @@ def get_all_users(jwt):
     return jsonify([user.to_dict() for user in users])
 
 
-# ADD PERMISSIONS -> staff and user 
 @users_bp.route("/<id>", methods=["PATCH"])
-def update_user_info(id):
+@requires_auth('update:user')
+def update_user_info(jwt,id):
 
     user_id = validate.valid_id(id)
     user = validate.valid_model(user_id, User)
@@ -101,15 +96,12 @@ def update_user_info(id):
         user.phone_number = request_body["phone_number"]
     
     db.session.commit()
-
     return user.to_dict(), 201
 
 
-
-# If package was requested == True else False
-# user and manager have access to patch status
 @users_bp.route("/<id>/status", methods=["PATCH"])
-def update_statuts(id):
+@requires_auth('update:request-status')
+def update_status(jwt,id):
 
     user_id = validate.valid_id(id)
     user = validate.valid_model(user_id, User)
@@ -125,10 +117,9 @@ def update_statuts(id):
         return make_response(validate.missing_fields(request_body, User), 400)
 
 
-# An user got a package 
-# permissions -> staff
 @users_bp.route("/<id>/packages", methods=["POST"])
-def add_new_package(id):
+@requires_auth('create:package')
+def add_new_package(jwt,id):
 
     user_id = validate.valid_id(id)
     request_body = request.get_json()
@@ -150,7 +141,8 @@ def add_new_package(id):
 
 # get all packages related to a user 
 @users_bp.route("/<id>/packages", methods=["GET"])
-def get_packages_by_user_id(id):
+@requires_auth('read:packages-user')
+def get_packages_by_user_id(jwt,id):
 
     user_id = validate.valid_id(id)
     validate.valid_model(user_id, User)
@@ -160,7 +152,8 @@ def get_packages_by_user_id(id):
 
 
 @users_bp.route("/<id>/packages-not-delivered", methods=["GET"])
-def get_packages_to_be_delivered(id):
+@requires_auth('read:packages-not-delivered')
+def get_packages_to_be_delivered(jwt,id):
 
     user_id = validate.valid_id(id)
     validate.valid_model(user_id, User)
@@ -184,9 +177,9 @@ def get_packages_to_be_delivered(id):
 
     return make_response(jsonify(response_body),200)
 
-# Get all packages and user that required delivery
 
 @users_bp.route("/delivery-requests", methods=["GET"])
+@requires_auth('read:delivery-requests')
 def get_requests():
 
     all_users = User.query.filter_by(status=True).all()
@@ -206,10 +199,9 @@ def get_requests():
     return make_response(jsonify(result),200)
 
 
-
-# get all packages delivere -> user and staff
 @users_bp.route("/<id>/packages-delivered", methods=["GET"])
-def get_all_delivered_packages(id):
+@requires_auth('read:packages-delivered')
+def get_all_delivered_packages(jwt,id):
 
     user_id = validate.valid_id(id)
     validate.valid_model(user_id, User)
