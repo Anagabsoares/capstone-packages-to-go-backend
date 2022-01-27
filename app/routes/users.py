@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, abort
 from app import db
 import app.validate_requests  as validate
+from flask_cors import cross_origin
 from datetime import datetime
 
 from app.models.user import User
@@ -21,9 +22,9 @@ def auth_error(error):
     return response
 
 
-# Add permissions -> only staff members can add new residents 
 @users_bp.route("", methods=["POST"],strict_slashes=False)
-def add_user():
+@requires_auth("create:user")
+def add_user(jwt):
     request_body = request.get_json()
     try:
         new_user= User(
@@ -38,11 +39,11 @@ def add_user():
         return new_user.to_dict(), 201
 
     except KeyError:
-
         return make_response(validate.missing_fields(request_body, User), 400)
 
-# permission -> staff
+
 @users_bp.route("/<id>", methods=["DELETE"])
+@requires_auth("delete:user")
 def delete_user(id):
     user_id = validate.valid_id(id)
     user = validate.valid_model(user_id, User)
@@ -55,7 +56,8 @@ def delete_user(id):
 # permission - staff
 # 
 @users_bp.route("/<id>", methods=["GET"])
-def get_user(id):
+@requires_auth("read:users")
+def get_user(jwt,id):
 
     user_id = validate.valid_id(id)
     user = validate.valid_model(user_id, User)
@@ -65,7 +67,8 @@ def get_user(id):
 
 # ADD PERMISSIONS  -> staff
 @users_bp.route("", methods=["GET"])
-def get_all_users():
+@requires_auth('read:users')
+def get_all_users(jwt):
 
     users = User.query.all()
     return jsonify([user.to_dict() for user in users])

@@ -38,4 +38,7 @@ def create_app(test_config=None):
     app.register_blueprint(users_bp)
 
     CORS(app)
+
+
+
     return app

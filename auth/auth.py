@@ -9,9 +9,9 @@ from urllib.request import urlopen
 # https://capstone-package-to-go.us.auth0.com/authorize?audience=https://packages-to-go.com&response_type=token&client_id=olHrVA9ljTarhF43w5PLtxHIq4NHnFSe&redirect_uri=http://localhost:3000
 
 
-AUTH0_DOMAIN = config("AUTH0_DOMAIN")
-ALGORITHMS = config("ALGORITHMS")
-API_AUDIENCE = config("API_AUDIENCE")
+AUTH0_DOMAIN = "capstone-package-to-go.us.auth0.com"
+ALGORITHMS = ["RS256"]
+API_AUDIENCE = "https://packages-to-go.com"
 
 
 class AuthError(Exception):
@@ -77,6 +77,7 @@ def check_permissions(permission, payload):
 
 # Key ID => kid
 def verify_decode_jwt(token):
+    print(f'token is {token}')
     jsonurl = urlopen(f"https://{AUTH0_DOMAIN}/.well-known/jwks.json")
     jwks = json.loads(jsonurl.read())
     unverified_header = jwt.get_unverified_header(token)
@@ -119,7 +120,8 @@ def verify_decode_jwt(token):
                 },
                 401,
             )
-        except Exception:
+        except Exception as e:
+            print(e)
             raise AuthError(
                 {
                     "code": "invalid_header",

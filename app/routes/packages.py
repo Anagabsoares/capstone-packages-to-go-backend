@@ -6,7 +6,7 @@ import app.validate_requests  as validate
 from app.models.package import Package
 from app.models.user import User
 
-from auth.auth import AuthError, requires_auth
+# from auth.auth import AuthError, requires_auth
 
 
 packages_bp = Blueprint("packages", __name__, url_prefix="/packages")
