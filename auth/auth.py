@@ -12,7 +12,7 @@ from urllib.request import urlopen
 AUTH0_DOMAIN = os.environ.get(
             "AUTH0_DOMAIN")
 ALGORITHMS = os.environ.get("ALGORITHMS")
-API_AUDIENCE =  os.environ.get("API_AUDIENCE")
+API_AUD =  os.environ.get("API_AUD")
 
 
 class AuthError(Exception):
@@ -102,7 +102,7 @@ def verify_decode_jwt(token):
                 token,
                 rsa_key,
                 algorithms=ALGORITHMS,
-                audience=API_AUDIENCE,
+                audience=API_AUD,
                 issuer="https://" + AUTH0_DOMAIN + "/",
             )
             return payload
