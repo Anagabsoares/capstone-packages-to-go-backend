@@ -99,23 +99,6 @@ def update_user_info(jwt,id):
     return user.to_dict(), 201
 
 
-@users_bp.route("/<id>/status", methods=["PATCH"])
-@requires_auth('update:request-status')
-def update_status(jwt,id):
-
-    user_id = validate.valid_id(id)
-    user = validate.valid_model(user_id, User)
-    request_body = request.get_json()
-
-    try:
-        user.status = request_body["status"]
-        db.session.commit()
-        return user.to_dict(), 201
-
-    except KeyError:
-
-        return make_response(validate.missing_fields(request_body, User), 400)
-
 
 @users_bp.route("/<id>/packages", methods=["POST"])
 @requires_auth('create:package')

@@ -49,6 +49,23 @@ def delete_package(jwt,id):
     response_body = {"details": f"User {package.id} provider: {package.service_provider} successfully deleted"}
     return make_response(response_body), 200
 
+@packages_bp.route("/<id>/status", methods=["PATCH"])
+@requires_auth('update:request-status')
+def update_status(jwt,id):
+
+    package_id = validate.valid_id(id)
+    package = validate.valid_model(package_id, Package)
+    request_body = request.get_json()
+
+    try:
+        package.status = request_body["status"]
+        db.session.commit()
+        return package.to_dict(), 201
+
+    except KeyError:
+
+        return make_response(validate.missing_fields(request_body, User), 400)
+
 
 @packages_bp.route("/<id>/mark-as-delivered", methods=["PATCH"])
 @requires_auth("update:delivery-status")
