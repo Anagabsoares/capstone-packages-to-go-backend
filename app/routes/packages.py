@@ -18,7 +18,6 @@ def auth_error(error):
     response.status_code = error.status_code
     return response
 
-
 @packages_bp.route("", methods=["GET"])
 @requires_auth("read:package")
 def get_all_packages(jwt):

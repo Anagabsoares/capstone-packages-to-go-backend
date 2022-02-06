@@ -1,8 +1,8 @@
-"""empty message
+"""Add Packages and User model
 
-Revision ID: 0364bc70a487
+Revision ID: db27c30ecfb6
 Revises: 
-Create Date: 2022-01-25 09:43:08.934631
+Create Date: 2022-02-06 14:03:29.156306
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0364bc70a487'
+revision = 'db27c30ecfb6'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,7 +24,6 @@ def upgrade():
     sa.Column('email', sa.String(length=64), nullable=True),
     sa.Column('phone_number', sa.String(length=100), nullable=True),
     sa.Column('unit', sa.String(length=10), nullable=False),
-    sa.Column('status', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('package',
@@ -32,8 +31,9 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('description', sa.String(length=100), nullable=True),
     sa.Column('service_provider', sa.String(length=100), nullable=False),
-    sa.Column('arrived_at', sa.DateTime(timezone=True), nullable=False),
-    sa.Column('delivery_date', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('arrived_at', sa.DateTime(), nullable=False),
+    sa.Column('delivery_date', sa.DateTime(), nullable=True),
+    sa.Column('status', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
