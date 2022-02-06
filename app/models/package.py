@@ -10,7 +10,7 @@ class Package(db.Model):
     service_provider = db.Column(db.String(100), nullable=False)
     arrived_at = db.Column(db.DateTime(timezone=False), nullable=False, default=datetime.utcnow)
     delivery_date = db.Column(db.DateTime(timezone=True), nullable=True)
-    status = db.Column(db.Boolean, default=False)
+    status = db.Column(db.Boolean,nullable=False, default=False)
     required_fields = ["user_id", "service_provider", "description"]
 
     def to_dict(self):
