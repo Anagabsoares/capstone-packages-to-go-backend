@@ -8,7 +8,7 @@ class Package(db.Model):
     user = db.relationship('User', back_populates="packages", lazy=True)
     description = db.Column(db.String(100), nullable=True)
     service_provider = db.Column(db.String(100), nullable=False)
-    arrived_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    arrived_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     delivery_date = db.Column(db.DateTime, nullable=True)
     status = db.Column(db.Boolean, default=False)
     required_fields = ["user_id", "service_provider", "description"]
