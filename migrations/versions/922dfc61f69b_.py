@@ -1,8 +1,8 @@
-"""Add Packages and User model
+"""empty message
 
-Revision ID: db27c30ecfb6
+Revision ID: 922dfc61f69b
 Revises: 
-Create Date: 2022-02-06 14:03:29.156306
+Create Date: 2022-02-06 15:17:38.523937
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'db27c30ecfb6'
+revision = '922dfc61f69b'
 down_revision = None
 branch_labels = None
 depends_on = None
