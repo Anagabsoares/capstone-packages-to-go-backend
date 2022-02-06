@@ -18,7 +18,7 @@ def auth_error(error):
     response.status_code = error.status_code
     return response
 
-
+# admin 
 @users_bp.route("", methods=["POST"],strict_slashes=False)
 @requires_auth("create:user")
 def add_user(jwt):
@@ -208,5 +208,7 @@ def get_all_delivered_packages(jwt,id):
     packages = Package.query.filter_by(user_id=user_id).all()
 
     return jsonify([package.to_dict() for package in packages if package.delivery_date])
+
+
 
 

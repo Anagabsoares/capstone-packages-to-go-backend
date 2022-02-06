@@ -8,7 +8,6 @@ class  User(db.Model):
     email= db.Column(db.String(64), nullable=True)
     phone_number = db.Column(db.String(100), nullable=True)
     unit = db.Column(db.String(10), nullable=False)
-    status = db.Column(db.Boolean, default=False)
     required_fields = ["name", "unit", "email", "phone_number"]
     
     def to_dict(self):
@@ -18,7 +17,6 @@ class  User(db.Model):
             "phone_number": self.phone_number,
             "user_id": self.id,
             "unit":self.unit,
-            "status": self.status,
             }
 
             

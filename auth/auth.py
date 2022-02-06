@@ -9,8 +9,7 @@ from urllib.request import urlopen
 
 # https://capstone-package-to-go.us.auth0.com/authorize?audience=https://packages-to-go.com&response_type=token&client_id=olHrVA9ljTarhF43w5PLtxHIq4NHnFSe&redirect_uri=http://localhost:3000
 
-AUTH0_DOMAIN = os.environ.get(
-            "AUTH0_DOMAIN")
+AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
 ALGORITHMS = os.environ.get("ALGORITHMS")
 API_AUD =  os.environ.get("API_AUD")
 
