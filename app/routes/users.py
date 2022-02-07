@@ -111,7 +111,8 @@ def add_new_package(jwt,id):
         new_card = Package(
             user_id=user_id,
             description=request_body["description"],
-            service_provider=request_body["service_provider"]
+            service_provider=request_body["service_provider"],
+            arrived_at= datetime.utcnow(),
         )
         db.session.add(new_card)
         db.session.commit()

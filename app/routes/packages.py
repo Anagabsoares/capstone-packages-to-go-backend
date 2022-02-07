@@ -75,7 +75,7 @@ def update_package_delivery(jwt,id):
 
     if not package.delivery_date:
         package.delivery_date = datetime.utcnow()
-    
+
         db.session.commit()
         response_body = package.to_dict()
         return make_response(response_body), 200
