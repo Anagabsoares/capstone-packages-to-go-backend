@@ -108,16 +108,16 @@ def add_new_package(jwt,id):
     request_body = request.get_json()
 
     try:
-        new_card = Package(
+        new_package = Package(
             user_id=user_id,
             description=request_body["description"],
             service_provider=request_body["service_provider"],
             arrived_at= datetime.utcnow(),
         )
-        db.session.add(new_card)
+        db.session.add(new_package)
         db.session.commit()
 
-        return new_card.to_dict(), 201
+        return new_package.to_dict(), 201
 
     except KeyError:
 
