@@ -112,7 +112,7 @@ def add_new_package(jwt,id):
             user_id=user_id,
             description=request_body["description"],
             service_provider=request_body["service_provider"],
-            arrived_at= datetime.utcnow(),
+            arrived_at= datetime.now(),
         )
         db.session.add(new_package)
         db.session.commit()

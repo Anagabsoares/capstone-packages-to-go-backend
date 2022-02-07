@@ -74,7 +74,7 @@ def update_package_delivery(jwt,id):
     package = validate.valid_model(package_id, Package)
 
     if not package.delivery_date:
-        package.delivery_date = datetime.utcnow()
+        package.delivery_date = datetime.now()
 
         db.session.commit()
         response_body = package.to_dict()
