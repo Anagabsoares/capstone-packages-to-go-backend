@@ -1,5 +1,5 @@
 from app import db
-from datetime import date,datetime, timezone
+from datetime import datetime, timezone
 
 
 class Package(db.Model):
@@ -9,7 +9,7 @@ class Package(db.Model):
     description = db.Column(db.String(100), nullable=True)
     service_provider = db.Column(db.String(100), nullable=False)
     delivery_date = db.Column(db.DateTime, nullable=True)
-    arrived_at = db.Column(db.Date, nullable=False, default=date)
+    arrived_at = db.Column(db.Date, nullable=False, default=datetime.now)
     status = db.Column(db.Boolean, default=False)
     required_fields = ["user_id", "service_provider", "description"]
 
