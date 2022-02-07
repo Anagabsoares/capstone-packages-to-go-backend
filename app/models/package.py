@@ -9,7 +9,7 @@ class Package(db.Model):
     description = db.Column(db.String(100), nullable=True)
     service_provider = db.Column(db.String(100), nullable=False)
     delivery_date = db.Column(db.DateTime, nullable=True)
-    arrived_at = db.Column(db.Datetime, nullable=False)
+    arrived_at = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.Boolean, default=False)
     required_fields = ["user_id", "service_provider", "description"]
 
