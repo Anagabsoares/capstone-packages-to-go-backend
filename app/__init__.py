@@ -32,6 +32,7 @@ def create_app(test_config=None):
 
     from .routes.packages import packages_bp
     from .routes.users import users_bp
+    from .routes.notifications import notifications_bp
 
     app.register_blueprint(packages_bp)
     app.register_blueprint(users_bp)

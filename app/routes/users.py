@@ -5,6 +5,7 @@ from datetime import datetime
 
 from app.models.user import User
 from app.models.package import Package
+from app.models.notification import Notification
 
 from auth.auth import AuthError, requires_auth
 
@@ -195,4 +196,25 @@ def get_all_delivered_packages(jwt,id):
 
 
 
+@users_bp.route("/<user_id>/notifications-not-read", methods=["GET"])
+@requires_auth('read:notifications')
+def get_all_not_read_notif(jwt,id):
 
+    user_id = validate.valid_id(id)
+    validate.valid_model(user_id, User)
+    notifications = Notification.query.filter_by(user_id=user_id).all()
+
+
+
+    return jsonify([notification.to_dict() for notification in notifications if notification.is_read])
+
+
+@users_bp.route("/<id>/notifications", methods=["GET"])
+@requires_auth('read:notifications')
+def get_packages_by_user_id(jwt,id):
+
+    user_id = validate.valid_id(id)
+    validate.valid_model(user_id, User)
+    notifications = Package.query.filter_by(user_id=user_id).all()
+
+    return jsonify([notification.to_dict() for notification in notifications])
