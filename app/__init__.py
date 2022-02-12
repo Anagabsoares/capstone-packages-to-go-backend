@@ -25,6 +25,7 @@ def create_app(test_config=None):
 
     from app.models.user import User
     from app.models.package import Package
+    from app.models.notification import Notification
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -36,6 +37,7 @@ def create_app(test_config=None):
 
     app.register_blueprint(packages_bp)
     app.register_blueprint(users_bp)
+    app.register_blueprint(notifications_bp)
 
     CORS(app)
 

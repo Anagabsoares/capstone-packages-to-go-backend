@@ -196,7 +196,7 @@ def get_all_delivered_packages(jwt,id):
 
 
 
-@users_bp.route("/<user_id>/notifications-not-read", methods=["GET"])
+@users_bp.route("/<id>/notifications-not-read", methods=["GET"])
 @requires_auth('read:notifications')
 def get_all_not_read_notif(jwt,id):
 
@@ -206,15 +206,64 @@ def get_all_not_read_notif(jwt,id):
 
 
 
-    return jsonify([notification.to_dict() for notification in notifications if notification.is_read])
+    return jsonify([notification.to_dict() for notification in notifications if notification.is_read== False])
 
 
 @users_bp.route("/<id>/notifications", methods=["GET"])
 @requires_auth('read:notifications')
-def get_packages_by_user_id(jwt,id):
+def get_notifications_by_user_id(jwt,id):
 
     user_id = validate.valid_id(id)
     validate.valid_model(user_id, User)
-    notifications = Package.query.filter_by(user_id=user_id).all()
+    notifications = Notification.query.filter_by(user_id=user_id).all()
 
     return jsonify([notification.to_dict() for notification in notifications])
+
+
+@users_bp.route("/<id>/notifications", methods=["POST"],strict_slashes=False)
+@requires_auth("create:notifications")
+def create_notification(jwt,id):
+
+
+    user_id = validate.valid_id(id)
+    request_body = request.get_json()
+
+    try:
+        new_noti= Notification(
+            user_id=request_body["user_id"],
+            entity_type=request_body["entity_type"],
+            description=request_body["description"],
+        )
+
+        db.session.add(new_noti)
+        db.session.commit()
+
+        return new_noti.to_dict(), 201
+
+    except KeyError:
+        return make_response(validate.missing_fields(request_body, Notification), 400)
+
+
+
+
+@users_bp.route("/<id>/mark-all-as-read", methods=["PATCH"])
+@requires_auth("read:notifications")
+def mark_all_as_read(jwt,id):
+
+    user_id = validate.valid_id(id)
+    user= validate.valid_model(user_id, User)
+    notifications = Notification.query.filter_by(user_id=user_id).all()
+    print(notifications)
+
+    for notification in notifications:
+        print(notification)
+        if not notification.is_read:
+            print('HOOO')
+            print(notification)
+            notification.is_read = True
+            db.session.commit()
+        else:
+            pass
+        
+    response_body =[ notification.to_dict() for notification in notifications]
+    return jsonify(response_body), 200

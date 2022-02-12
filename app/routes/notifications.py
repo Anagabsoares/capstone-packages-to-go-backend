@@ -19,17 +19,16 @@ def auth_error(error):
 
 # admin 
 @notifications_bp.route("", methods=["POST"],strict_slashes=False)
-@requires_auth("create:notification")
+@requires_auth("create:notifications")
 def add_notification(jwt):
 
 
     request_body = request.get_json()
     try:
         new_noti= Notification(
-            notification_id=request_body["notification_id"],
+            user_id=request_body["user_id"],
             entity_type=request_body["entity_type"],
             description=request_body["description"],
-            status=request_body["status"]
         )
         db.session.add(new_noti)
         db.session.commit()
@@ -53,7 +52,7 @@ def delete_notification(jwt,id):
 
 
 @notifications_bp.route("/<id>", methods=["GET"])
-@requires_auth("read:notification")
+@requires_auth("read:notifications")
 def get_notification(jwt,id):
 
     notification_id = validate.valid_id(id)
@@ -68,3 +67,22 @@ def get_all_notifications(jwt):
 
     notifications = Notification.query.all()
     return jsonify([notification.to_dict() for notification in notifications])
+
+
+
+@notifications_bp.route("/<id>/mark-as-read", methods=["PATCH"])
+@requires_auth("read:notifications")
+def update_package_delivery(jwt,id):
+
+    notification_id = validate.valid_id(id)
+    notification = validate.valid_model(notification_id, Notification)
+
+    if not notification.is_read:
+        notification.is_read = True
+
+        db.session.commit()
+        response_body = notification.to_dict()
+        return make_response(response_body), 200
+    else:
+        return make_response('This notification has already been read'), 200
+
