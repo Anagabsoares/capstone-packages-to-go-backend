@@ -253,17 +253,14 @@ def mark_all_as_read(jwt,id):
     user_id = validate.valid_id(id)
     user= validate.valid_model(user_id, User)
     notifications = Notification.query.filter_by(user_id=user_id).all()
-    print(notifications)
+
 
     for notification in notifications:
-        print(notification)
         if not notification.is_read:
-            print('HOOO')
-            print(notification)
             notification.is_read = True
             db.session.commit()
         else:
             pass
-        
+
     response_body =[ notification.to_dict() for notification in notifications]
     return jsonify(response_body), 200
