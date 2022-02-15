@@ -13,7 +13,7 @@
 - Create a virtual environment
   
          $ python2 -m venv venv
-- Activate your virtual enviromen
+- Activate your virtual enviroment
   
          $ source venv bin activate 
 - install the dependencies 
@@ -85,13 +85,11 @@
     } 
     ]
 
-## Read - all users 
-    Endpoint -> https://localhost:5000/users
+## Read - a user
+    Endpoint -> https://localhost:5000/users/<user_id>
 
     Response body ->
-
-    [
-       {
+    {
     "email": "manuo@gmail.com",
     "name": "Emanueli",
     "phone_number": "(585)599-2380",
@@ -99,13 +97,278 @@
     "unit": "1498",
     "user_id": 4
     }
-    ,
+   
+
+##  Delete - users
+    Endpoint -> https://localhost:5000/users/<user_id>
+
+    Response body -> User {user.id} name: {user.name} unit: {user.unit} successfully deleted
+
+##  Update - users    
+    Endpoint -> https://localhost:5000/users/<user_id>
+
+    Request Body -> 
+    
     {
-    "email": "rita@gmail.com",
-    "name": "Rita",
+    "name": "Emanueli",
+    "unit": "1498",
+    "email": "manuo@gmail.com",
+    "phone_number": "(585)599-2380"
+    }
+
+    Response body ->
+    {
+    "email": "manuo@gmail.com",
+    "name": "Emanueli",
     "phone_number": "(585)599-2380",
     "status": false,
-    "unit": "6754",
-    "user_id": 1
-    } 
+    "unit": "1498",
+    "user_id": 4
+    }
+
+##  Create Package - users    
+    Endpoint -> https://localhost:5000/users/<user_id>/packages 
+
+    Request Body -> 
+    {
+    "user_id": user_id,
+    "description": "a description",
+    "service_provider": "service provider",
+    }
+
+    Response body ->
+    {
+    "user_id": user_id,
+    "packages_id": 1,
+    "description": "description",
+    "delivery_date": YYYY-MM-DD HH:MI:SS, 
+    "arrived_at":YYYY-MM-DD HH:MI:SS,
+    "service_provider": "service_provider",
+    "status": false,
+    }
+
+##  Read Packages - get a package that belongs to an user
+
+    Endpoint -> https://localhost:5000/users/<user_id>/packages 
+
+
+    Response body ->
+    {
+    "user_id": user_id,
+    "packages_id": 1,
+    "description": "description",
+    "delivery_date": YYYY-MM-DD HH:MI:SS, 
+    "arrived_at":YYYY-MM-DD HH:MI:SS,
+    "service_provider": "service_provider",
+    "status": false,
+    }
+
+## Read Delivery Requests - DEPRECATED -
+
+    Endpoint -> https://localhost:5000/users/delivery-request
+
+## Read Packages Delivered that belongs to a specific user 
+    Endpoint -> https://localhost:5000/users/<user_id>/packages-delivered
+
+    Response body ->
+    [
+        {
+    "user_id": user_id,
+    "packages_id": 1,
+    "description": "description",
+    "delivery_date": YYYY-MM-DD HH:MI:SS, 
+    "arrived_at":YYYY-MM-DD HH:MI:SS,
+    "service_provider": "service_provider",
+    "status": true,
+    }, 
+    {
+    "user_id": user_id,
+    "packages_id": 2,
+    "description": "description",
+    "delivery_date": YYYY-MM-DD HH:MI:SS, 
+    "arrived_at":YYYY-MM-DD HH:MI:SS,
+    "service_provider": "service_provider",
+    "status": true,
+    }
     ]
+    
+## Get Notifications not  read by a specific user
+    Endpoint -> https://localhost:5000/users/<user_id>/notifications-not-read
+
+    Response body ->
+
+    {
+        "user_id": user_id,
+        "entity_type": "1",
+        "description": "added new package",
+        "created_on": YYYY-MM-DD HH:MI:SS, 
+        "id": 1,
+        "is_read": false,
+    }
+    
+## Update  'is_read property' of all notifications that belongs to a specific user 
+    Endpoint -> https://localhost:5000/users/<user_id>/mark-all-as-read
+
+    Response body ->
+
+    {
+        "user_id": user_id,
+        "entity_type": "1",
+        "description": "added new package",
+        "created_on": YYYY-MM-DD HH:MI:SS, 
+        "id": 1,
+        "is_read": true,
+    }
+    
+
+## Read all Packages 
+    Endpoint -> https://localhost:5000/packages
+
+    Response body ->
+    [
+        {
+    "user_id": 1,
+    "packages_id": 1,
+    "description": "description",
+    "delivery_date": YYYY-MM-DD HH:MI:SS, 
+    "arrived_at":YYYY-MM-DD HH:MI:SS,
+    "service_provider": "service_provider",
+    "status": true,
+        }, 
+        {
+    "user_id": 5,
+    "packages_id": 2,
+    "description": "description",
+    "delivery_date": YYYY-MM-DD HH:MI:SS, 
+    "arrived_at":YYYY-MM-DD HH:MI:SS,
+    "service_provider": "service_provider",
+    "status": true,
+        }
+    ]
+
+## Read Packages 
+    Endpoint -> https://localhost:5000/packages/<package_id>
+
+    Response body ->
+
+    {
+    "user_id": 1,
+    "packages_id": package_id,
+    "description": "description",
+    "delivery_date": YYYY-MM-DD HH:MI:SS, 
+    "arrived_at":YYYY-MM-DD HH:MI:SS,
+    "service_provider": "service_provider",
+    "status": true,
+    }
+
+## Delete a  Package 
+    Endpoint -> https://localhost:5000/packages/<package_id>
+
+    Response body -> {package_id} provider: {package.service_provider} successfully deleted
+
+## Update Package's status
+    Endpoint -> https://localhost:5000/packages/<package_id>/status
+
+    Response body ->
+    {
+    "user_id": 1,
+    "packages_id": 1,
+    "description": "description",
+    "delivery_date": YYYY-MM-DD HH:MI:SS, 
+    "arrived_at":YYYY-MM-DD HH:MI:SS,
+    "service_provider": "service_provider",
+    "status": true,
+    }, 
+
+## Update Package's delivery_date 
+    Endpoint -> https://localhost:5000/packages/<package_id>/status
+
+    Response body ->
+    {
+    "user_id": 1,
+    "packages_id": 1,
+    "description": "description",
+    "delivery_date": YYYY-MM-DD HH:MI:SS, 
+    "arrived_at":YYYY-MM-DD HH:MI:SS,
+    "service_provider": "service_provider",
+    "status": true,
+    }, 
+
+## Update a Package
+    Endpoint -> https://localhost:5000/packages/<package_id>
+
+    Request Body ->   {
+    "user_id": 1,
+    "description": "description",
+    "service_provider": "service_provider"
+    }
+
+    Response body ->
+    
+    {
+    "user_id": 1,
+    "packages_id": 1,
+    "description": "description",
+    "delivery_date": YYYY-MM-DD HH:MI:SS, 
+    "arrived_at":YYYY-MM-DD HH:MI:SS,
+    "service_provider": "service_provider",
+    "status": true,
+    }
+
+
+# Create Notification
+    Endpoint -> https://localhost:5000/notifications
+
+    Request Body -> 
+
+    {
+        "user_id": user_id,
+        "entity_type": "1",
+        "description": "added new package",
+    }
+
+    Response body ->
+
+    {
+        "user_id": user_id,
+        "entity_type": "1",
+        "description": "added new package",
+        "created_on": YYYY-MM-DD HH:MI:SS, 
+        "id": 1,
+        "is_read": true,
+    }
+
+# Create Notification
+    Endpoint -> https://localhost:5000/notifications/<noti_id>
+
+    Response Body -> notification {noti_id}  successfully deleted
+
+# Read a specific notification
+    Endpoint -> https://localhost:5000/notifications/<noti_id>
+
+    Response body ->
+
+    {
+        "user_id": 3,
+        "entity_type": "1",
+        "description": "added new package",
+        "created_on": YYYY-MM-DD HH:MI:SS, 
+        "id": not_id,
+        "is_read": true,
+    }
+
+
+# Update a specific notification -  mark as read
+    Endpoint -> https://localhost:5000/notifications/<noti_id>/mark-as-read
+
+    Response body ->
+    
+    {
+        "user_id": 3,
+        "entity_type": "1",
+        "description": "added new package",
+        "created_on": YYYY-MM-DD HH:MI:SS, 
+        "id": not_id,
+        "is_read": true,
+    }
+    
