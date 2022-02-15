@@ -3,7 +3,7 @@
 
 ## Description
 
-- This  is a package delivery management backend application,  created as a Capstone project for Ada Developer Academy.  It aims to help buildings to manage their  resident's incoming packages and delivery requests.
+- This  is a package delivery management application,  created as a Capstone project for Ada Developer Academy.  It aims to help buildings to manage their  resident's incoming packages and delivery requests.
 - This app allows  the manager's account to create a list of packages, associate each package with its owner, update package information, view package information and delete package information when the package is  delivered successfully.
 - This app also allows the resident's account to access/view  the packages and request delivery.
 
